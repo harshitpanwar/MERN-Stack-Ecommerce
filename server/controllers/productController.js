@@ -1,7 +1,8 @@
 const Product = require("../models/productModel");
+const ErrorHandler = require("../utils/errorhandler");
 
 
-//Create Prouduct
+//Create Product
 
 exports.createProduct = async (req, res, next)=>{
 
@@ -14,15 +15,15 @@ exports.createProduct = async (req, res, next)=>{
 
 }
 
-//Get All Prouducts
+//Get All Products
 
 exports.getAllProducts = async(req, res) => {
 
-    const prouducts = await Product.find()
+    const products = await Product.find()
 
     res.status(200).json({
         success:true,
-        prouducts
+        products
     });
 
 }
@@ -32,8 +33,8 @@ exports.getAllProducts = async(req, res) => {
 
 exports.updateProduct = async (req, res, next)=>{
 
-    let prouduct = await Product.findById(req.params.id);
-    if(!prouduct){
+    let product = await Product.findById(req.params.id);
+    if(!product){
         return res.status(500).json({
             success:false,
             message:"Product not found"
@@ -84,21 +85,25 @@ exports.deleteProduct = async(req, res, next)=>{
 
 //Get single product details
 
-exports.getProduct = async(req, res)=>{
+exports.getProductDetails = async(req, res, next)=>{
 
     const product = await Product.findById(req.params.id);
 
     if(!product){
-        return res.status(500).json({
-            success:false,
-            message:"Product not found"
-        })
+        return next(new ErrorHandler("Product Not Found", 404));
+
+        // return res.status(500).json({
+        //     success:false,
+        //     message:"Product not found"
+        // })
+
+
     }
 
     res.status(200).json({
         success:true,
         product
-    })
+    });
 
 
-}
+};
